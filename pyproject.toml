@@ -54,3 +54,16 @@ DJANGO_SETTINGS_MODULE = "config.test_settings"
 # -n auto: parallel via pytest-xdist (constitution: Testing Standards)
 addopts = "-n auto"
 testpaths = ["tests", "example"]
+
+[tool.coverage.run]
+# The instantiation script drops "example" from this list when it removes
+# the app.
+source = ["config", "example"]
+
+[tool.coverage.report]
+# Measured floor, not an aspiration: untouched scaffold measured 93%,
+# post-instantiation (config only, permanent tests) measured 86%; the floor
+# sits just below the lower number so it holds in BOTH shipped states.
+# Constitution: this only ratchets upward — raise it as real coverage grows,
+# never lower it.
+fail_under = 85
