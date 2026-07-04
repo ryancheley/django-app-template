@@ -1,0 +1,78 @@
+# Proves instantiation can never silently rot: run the script against this
+# checkout, then run the full gate suite on the result (research R15).
+# scripts/instantiate.py deletes this workflow in real instantiations.
+name: Instantiation
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions: {}
+
+env:
+  UV_FROZEN: "1"
+
+jobs:
+  instantiate-and-gate:
+    name: instantiate, then full gate suite on the result
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    services:
+      postgres:
+        image: postgres:18
+        env:
+          POSTGRES_DB: testproject
+          POSTGRES_USER: testproject
+          POSTGRES_PASSWORD: ci-only-password
+        options: >-
+          --health-cmd "pg_isready -U testproject"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 10
+        ports:
+          - 5432:5432
+    env:
+      POSTGRES_HOST: localhost
+      POSTGRES_PORT: "5432"
+      POSTGRES_DB: testproject
+      POSTGRES_USER: testproject
+      POSTGRES_PASSWORD: ci-only-password
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@fac544c07dec837d0ccb6301d7b5580bf5edae39 # v8.2.0
+      - name: Example-isolation guard (template state)
+        run: |
+          if grep -rEn "from example|import example" --include="*.py" . \
+               --exclude-dir=example --exclude-dir=scripts --exclude-dir=tests; then
+            echo "::error::code outside example/ imports the example app"
+            exit 1
+          fi
+      - name: Run the instantiation script
+        run: python3 scripts/instantiate.py testproject
+      - name: Placeholder fully rewritten
+        run: |
+          if grep -rn "template_project" . --exclude-dir=.git; then
+            echo "::error::placeholder survived instantiation"
+            exit 1
+          fi
+          test ! -d example
+      - name: Sync locked dependencies (post-rename)
+        run: uv sync
+      - name: Lint
+        run: |
+          uv run ruff check .
+          uv run ruff format --check .
+      - name: Type check
+        run: uv run ty check --exit-zero-on-warning
+      - name: Coverage-gated tests
+        run: uv run pytest --cov
+      - name: Deploy check
+        run: |
+          SECRET_KEY=$(uv run python -c "import secrets; print(secrets.token_urlsafe(64))") \
+          DEBUG=false \
+          ALLOWED_HOSTS=example.com \
+          uv run python manage.py check --deploy --fail-level WARNING

@@ -1,0 +1,69 @@
+[project]
+name = "template_project"
+version = "0.1.0"
+description = "Django application template: fully gated starting point for new Django apps and sites"
+requires-python = ">=3.14"
+dependencies = [
+    # Latest stable Django with a <next-major bound: feature releases flow via
+    # Dependabot, a major jump is a deliberate decision (constitution: Technology Stack).
+    "django>=6.0,<7.0",
+    "psycopg[binary]>=3.3",
+    "django-axes>=8.3",
+    "django-csp>=4.0",
+    "whitenoise>=6.12",
+    "gunicorn>=26.0",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=9.1",
+    "pytest-django>=4.12",
+    "pytest-xdist>=3.8",
+    "pytest-cov>=7.1",
+    "factory-boy>=3.3",
+    "ruff>=0.15",
+    "ty>=0.0.56",
+]
+
+[tool.uv]
+# Application repo, not an installable package.
+package = false
+
+[tool.ruff]
+line-length = 100
+target-version = "py314"
+
+[tool.ruff.lint]
+# E/F pycodestyle+pyflakes, I import order, UP modernization, B bugbear,
+# DJ Django-specific rules (constitution: Code Quality).
+select = ["E", "F", "I", "UP", "B", "DJ"]
+
+[tool.ty.rules]
+# ty does not yet understand Django's ORM/manager metaprogramming, so these
+# four rules fire on idiomatic Django code (Model.objects, CharField
+# assignment, etc.). Downgraded to warn — visible but non-blocking — until ty
+# gains Django awareness; restore to default severity then. All other rules
+# stay at default (constitution: Code Quality).
+unresolved-attribute = "warn"
+invalid-assignment = "warn"
+invalid-argument-type = "warn"
+invalid-return-type = "warn"
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "config.test_settings"
+# -n auto: parallel via pytest-xdist (constitution: Testing Standards)
+addopts = "-n auto"
+testpaths = ["tests", "example"]
+
+[tool.coverage.run]
+# The instantiation script drops "example" from this list when it removes
+# the app.
+source = ["config", "example"]
+
+[tool.coverage.report]
+# Measured floor, not an aspiration: untouched scaffold measured 93%,
+# post-instantiation (config only, permanent tests) measured 86%; the floor
+# sits just below the lower number so it holds in BOTH shipped states.
+# Constitution: this only ratchets upward — raise it as real coverage grows,
+# never lower it.
+fail_under = 85

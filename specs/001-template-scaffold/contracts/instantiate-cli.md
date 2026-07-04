@@ -38,7 +38,9 @@ files modified.
    - remove `"example"` from `INSTALLED_APPS` in `config/settings.py`
    - remove the example include from `config/urls.py`
    - remove `example` from the coverage source list in `pyproject.toml`
-3. Delete `.github/workflows/instantiation.yml`.
+3. Delete `.github/workflows/instantiation.yml` and
+   `tests/test_instantiation.py` (template-repo artifacts that test this
+   script; they leave with it so the post-instantiation suite stays green).
 4. Delete `scripts/instantiate.py` itself (and `scripts/` if now empty).
 5. Print next steps: copy `.env.example` → `.env`, `docker compose up`,
    `just prek-install`, verify `/health/`, run `just check`, first commit

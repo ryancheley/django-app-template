@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}Example items{% endblock %}
+
+{% block content %}
+  <h1 class="text-2xl font-bold">Example items</h1>
+  <p class="mt-2 text-slate-700">
+    This page belongs to the <code class="rounded bg-slate-100 px-1">example</code>
+    app, which exists to demonstrate the expected app layout and is removed at
+    instantiation.
+  </p>
+
+  {% if items %}
+    <ul class="mt-4 list-disc space-y-1 pl-6">
+      {% for item in items %}
+        <li>{{ item.name }}</li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p class="mt-4">
+      No items yet. Add some in the
+      <a href="{% url 'admin:index' %}"
+         class="text-blue-800 underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700">admin</a>.
+    </p>
+  {% endif %}
+
+  <section aria-labelledby="count-heading" class="mt-8 rounded border border-slate-200 p-4">
+    <h2 id="count-heading" class="text-lg font-semibold">Live item count (htmx demo)</h2>
+    <button type="button"
+            hx-get="{% url 'example:item_count' %}"
+            hx-target="#item-count"
+            class="mt-2 rounded bg-blue-700 px-3 py-2 font-medium text-white hover:bg-blue-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700">
+      Refresh count
+    </button>
+    <p id="item-count" aria-live="polite" class="mt-2 text-slate-700">
+      Press the button to fetch the count without a page reload.
+    </p>
+  </section>
+{% endblock %}
