@@ -1,0 +1,30 @@
+[project]
+name = "template_project"
+version = "0.1.0"
+description = "Django application template: fully gated starting point for new Django apps and sites"
+requires-python = ">=3.14"
+dependencies = [
+    # Latest stable Django with a <next-major bound: feature releases flow via
+    # Dependabot, a major jump is a deliberate decision (constitution: Technology Stack).
+    "django>=6.0,<7.0",
+    "psycopg[binary]>=3.3",
+    "django-axes>=8.3",
+    "django-csp>=4.0",
+    "whitenoise>=6.12",
+    "gunicorn>=26.0",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=9.1",
+    "pytest-django>=4.12",
+    "pytest-xdist>=3.8",
+    "pytest-cov>=7.1",
+    "factory-boy>=3.3",
+    "ruff>=0.15",
+    "ty>=0.0.56",
+]
+
+[tool.uv]
+# Application repo, not an installable package.
+package = false
