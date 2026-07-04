@@ -3,12 +3,12 @@
 Kept separate so the deploy-check gate exercises config.settings untouched.
 """
 
-from config.settings import *  # noqa: F403
-
 # Host-side test runs reach the compose db through the host port mapping
 # 5433 -> 5432 (chosen so a locally installed Postgres on 5432 never
 # collides). CI overrides via POSTGRES_HOST/POSTGRES_PORT env instead.
 import os
+
+from config.settings import *  # noqa: F403
 
 DATABASES["default"]["HOST"] = os.environ.get("POSTGRES_HOST", "localhost")  # noqa: F405
 DATABASES["default"]["PORT"] = os.environ.get("POSTGRES_PORT", "5433")  # noqa: F405

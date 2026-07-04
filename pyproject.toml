@@ -29,6 +29,15 @@ dev = [
 # Application repo, not an installable package.
 package = false
 
+[tool.ruff]
+line-length = 100
+target-version = "py314"
+
+[tool.ruff.lint]
+# E/F pycodestyle+pyflakes, I import order, UP modernization, B bugbear,
+# DJ Django-specific rules (constitution: Code Quality).
+select = ["E", "F", "I", "UP", "B", "DJ"]
+
 [tool.pytest.ini_options]
 DJANGO_SETTINGS_MODULE = "config.test_settings"
 # -n auto: parallel via pytest-xdist (constitution: Testing Standards)

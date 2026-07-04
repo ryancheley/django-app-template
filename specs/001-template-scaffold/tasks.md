@@ -32,49 +32,49 @@ Lodestar layout (plan.md Project Structure): apps at repo root alongside `config
 
 **Goal**: Django skeleton, config package, health check, example app, Postgres compose, pytest passing — before any gate wiring (plan Implementation Order step 1).
 
-- [ ] T001 Create feature branch `001-template-scaffold` from `main`.
+- [X] T001 Create feature branch `001-template-scaffold` from `main`.
       Verify: `git branch --show-current` prints `001-template-scaffold`. Commit: 🌱
-- [ ] T002 Author `pyproject.toml` — project `template_project`, `requires-python = ">=3.14"`, runtime deps (Django pinned `<next-major` per research R1, psycopg, django-axes, django-csp, whitenoise, gunicorn), dev group (pytest, pytest-django, pytest-xdist, pytest-cov, factory-boy, ruff, ty) — then generate `uv.lock`. Serial (pyproject).
+- [X] T002 Author `pyproject.toml` — project `template_project`, `requires-python = ">=3.14"`, runtime deps (Django pinned `<next-major` per research R1, psycopg, django-axes, django-csp, whitenoise, gunicorn), dev group (pytest, pytest-django, pytest-xdist, pytest-cov, factory-boy, ruff, ty) — then generate `uv.lock`. Serial (pyproject).
       Verify: `uv sync` exits 0. Commit: 📦
-- [ ] T003 [P] Create `.gitignore` (`.env`, `.venv/`, `bin/`, `__pycache__/`, `.pytest_cache/`, `.coverage`, `staticfiles/`) and `.dockerignore` (`.git`, `.venv`, `bin`, `.env`, caches, `specs/`).
+- [X] T003 [P] Create `.gitignore` (`.env`, `.venv/`, `bin/`, `__pycache__/`, `.pytest_cache/`, `.coverage`, `staticfiles/`) and `.dockerignore` (`.git`, `.venv`, `bin`, `.env`, caches, `specs/`).
       Verify: `git check-ignore .env .venv bin` exits 0. Commit: 🙈
-- [ ] T004 [P] Create `.gitleaks.toml` with an empty allowlist and a comment stating the file exists to establish the allowlist pattern.
+- [X] T004 [P] Create `.gitleaks.toml` with an empty allowlist and a comment stating the file exists to establish the allowlist pattern.
       Verify: `uv run python -c "import tomllib,pathlib; tomllib.loads(pathlib.Path('.gitleaks.toml').read_text())"` exits 0. Commit: 🔒
-- [ ] T005 [P] Create `LICENSE` placeholder with a holder line the README will document as a user-action placeholder (must not trip any gate).
+- [X] T005 [P] Create `LICENSE` placeholder with a holder line the README will document as a user-action placeholder (must not trip any gate).
       Verify: `test -s LICENSE` exits 0. Commit: 📄
-- [ ] T006 [P] Create initial `.env.example` (SECRET_KEY, DEBUG, ALLOWED_HOSTS, POSTGRES_DB/USER/PASSWORD/HOST/PORT), one comment per variable; audited for completeness in T047.
+- [X] T006 [P] Create initial `.env.example` (SECRET_KEY, DEBUG, ALLOWED_HOSTS, POSTGRES_DB/USER/PASSWORD/HOST/PORT), one comment per variable; audited for completeness in T047.
       Verify: `test -s .env.example` exits 0. Commit: 🔧
-- [ ] T007 [US1] Create `manage.py`, `config/__init__.py`, `config/wsgi.py`, `config/asgi.py`.
+- [X] T007 [US1] Create `manage.py`, `config/__init__.py`, `config/wsgi.py`, `config/asgi.py`.
       Verify: `uv run python -c "import config, config.wsgi, config.asgi"` exits 0. Commit: 🏗️
-- [ ] T008 [US1] Create example app modules per data-model.md: `example/__init__.py`, `example/apps.py`, `example/models.py` (`ExampleItem`: name, notes, created_at, updated_at, `-created_at` ordering), `example/admin.py`.
+- [X] T008 [US1] Create example app modules per data-model.md: `example/__init__.py`, `example/apps.py`, `example/models.py` (`ExampleItem`: name, notes, created_at, updated_at, `-created_at` ordering), `example/admin.py`.
       Verify: `uv run python -m py_compile example/models.py example/admin.py example/apps.py` exits 0. Commit: 🧱
-- [ ] T009 [US1] Create `config/settings.py`: single env-driven module with safe-for-dev defaults (research R3); Postgres from `POSTGRES_*` env; whitenoise; django-axes (5 attempts, 1h cooloff, username+IP) and django-csp (`default-src 'self'`) with tune-per-project rationale comments (R11); SECURE_*/cookie/HSTS env-driven so prod-shaped env passes deploy checks. Serial-adjacent but single-owner file.
+- [X] T009 [US1] Create `config/settings.py`: single env-driven module with safe-for-dev defaults (research R3); Postgres from `POSTGRES_*` env; whitenoise; django-axes (5 attempts, 1h cooloff, username+IP) and django-csp (`default-src 'self'`) with tune-per-project rationale comments (R11); SECURE_*/cookie/HSTS env-driven so prod-shaped env passes deploy checks. Serial-adjacent but single-owner file.
       Verify: `SECRET_KEY=dev-only uv run python manage.py check` exits 0. Commit: ⚙️
-- [ ] T010 [US1] Create `config/test_settings.py` (lodestar pattern): import settings, point DB at `localhost:5433` with an in-file comment explaining 5433 avoids colliding with a local Postgres on 5432, fast password hasher.
+- [X] T010 [US1] Create `config/test_settings.py` (lodestar pattern): import settings, point DB at `localhost:5433` with an in-file comment explaining 5433 avoids colliding with a local Postgres on 5432, fast password hasher.
       Verify: `uv run python manage.py check --settings=config.test_settings` exits 0. Commit: 🧪
-- [ ] T011 [US1] Generate `example/migrations/0001_initial.py`.
+- [X] T011 [US1] Generate `example/migrations/0001_initial.py`.
       Verify: `SECRET_KEY=dev-only uv run python manage.py makemigrations --check --dry-run` exits 0 (no missing migrations). Commit: 🗃️
-- [ ] T012 [P] [US1] Create `config/views.py` with `health_check` implementing `contracts/health-endpoint.md` (SELECT 1 probe; 200 `{"status": "ok", "database": "ok"}`; 503 degraded; axes-exempt; GET only).
+- [X] T012 [P] [US1] Create `config/views.py` with `health_check` implementing `contracts/health-endpoint.md` (SELECT 1 probe; 200 `{"status": "ok", "database": "ok"}`; 503 degraded; axes-exempt; GET only).
       Verify: `uv run python -m py_compile config/views.py` exits 0 (contract asserted by T017 tests). Commit: 🩺
-- [ ] T013 [P] [US1] Create `example/views.py`, `example/urls.py`, `example/templates/example/item_list.html` (extends `base.html`, semantic markup).
+- [X] T013 [P] [US1] Create `example/views.py`, `example/urls.py`, `example/templates/example/item_list.html` (extends `base.html`, semantic markup).
       Verify: `uv run python -m py_compile example/views.py example/urls.py` exits 0. Commit: 🖼️
-- [ ] T014 [US1] Create `config/urls.py`: admin, `/health/`, `example` include (the include is a documented removal target of instantiation).
+- [X] T014 [US1] Create `config/urls.py`: admin, `/health/`, `example` include (the include is a documented removal target of instantiation).
       Verify: `SECRET_KEY=dev-only uv run python manage.py check` exits 0. Commit: 🕸️
-- [ ] T015 [US1] Create `templates/base.html`: semantic landmarks (header/main/footer), lang attribute, visible focus styles, `prefers-reduced-motion` respected. No static asset links yet — those land in Phase 3.
+- [X] T015 [US1] Create `templates/base.html`: semantic landmarks (header/main/footer), lang attribute, visible focus styles, `prefers-reduced-motion` respected. No static asset links yet — those land in Phase 3.
       Verify: `SECRET_KEY=dev-only uv run python manage.py check` exits 0. Commit: 📐
-- [ ] T016 [P] [US1] Create `example/factories.py` (`ExampleItemFactory`, Sequence-based deterministic names — no faker/random, per Principle II) plus app-local tests `example/tests/test_models.py` (factory-boy model test) and `example/tests/test_views.py` (list view renders).
+- [X] T016 [P] [US1] Create `example/factories.py` (`ExampleItemFactory`, Sequence-based deterministic names — no faker/random, per Principle II) plus app-local tests `example/tests/test_models.py` (factory-boy model test) and `example/tests/test_views.py` (list view renders).
       Verify: `uv run pytest example --collect-only -q` exits 0 (execution at T022). Commit: 🏭
-- [ ] T017 [P] [US1] Create `tests/test_health.py`: integration test asserting the 200/"ok" contract against a real database plus the 503/"degraded" path via a real broken connection — no mocks (contracts/health-endpoint.md).
+- [X] T017 [P] [US1] Create `tests/test_health.py`: integration test asserting the 200/"ok" contract against a real database plus the 503/"degraded" path via a real broken connection — no mocks (contracts/health-endpoint.md).
       Verify: `uv run pytest tests --collect-only -q` exits 0 (execution at T022). Commit: 🧬
-- [ ] T018 [US1] Configure pytest in `pyproject.toml` (`DJANGO_SETTINGS_MODULE=config.test_settings`, testpaths, `-n auto`). Serial (pyproject).
+- [X] T018 [US1] Configure pytest in `pyproject.toml` (`DJANGO_SETTINGS_MODULE=config.test_settings`, testpaths, `-n auto`). Serial (pyproject).
       Verify: `uv run pytest --collect-only -q` exits 0. Commit: 🎛️
-- [ ] T019 [US1] Create multi-stage `Dockerfile` per research R7 (uv builder stage `uv sync --frozen --no-dev` → `python:3.14-slim` runtime; dev target adds dev group; shared stages for dev/prod).
+- [X] T019 [US1] Create multi-stage `Dockerfile` per research R7 (uv builder stage `uv sync --frozen --no-dev` → `python:3.14-slim` runtime; dev target adds dev group; shared stages for dev/prod).
       Verify: `docker build --target dev -t template_project:dev .` exits 0. Commit: 🐳
-- [ ] T020 [US1] Create `compose.yaml`: `web` (dev target, runserver, source bind mount, migrate-before-serve) + `db` (latest stable Postgres major per R2, named volume, healthcheck, `service_healthy` gate), host mapping 5433→5432 with the in-file rationale comment. Serial (compose.yaml).
+- [X] T020 [US1] Create `compose.yaml`: `web` (dev target, runserver, source bind mount, migrate-before-serve) + `db` (latest stable Postgres major per R2, named volume, healthcheck, `service_healthy` gate), host mapping 5433→5432 with the in-file rationale comment. Serial (compose.yaml).
       Verify: `docker compose config -q` exits 0. Commit: 🧩
-- [ ] T021 [US1] Create `compose.prod.yaml`: gunicorn, whitenoise-served collected static, `DEBUG=false`, no bind mounts, restart policies, in-file comment stating migrations are an explicit operator step in prod. Same image/stages as dev.
+- [X] T021 [US1] Create `compose.prod.yaml`: gunicorn, whitenoise-served collected static, `DEBUG=false`, no bind mounts, restart policies, in-file comment stating migrations are an explicit operator step in prod. Same image/stages as dev.
       Verify: `docker compose -f compose.prod.yaml config -q` exits 0. Commit: 🏭
-- [ ] T022 [US1] **CHECKPOINT — Phase 1 closes.** `cp .env.example .env && docker compose up -d --wait`, then all of:
+- [X] T022 [US1] **CHECKPOINT — Phase 1 closes.** `cp .env.example .env && docker compose up -d --wait`, then all of:
       `curl -fsS localhost:8000/health/` returns `{"status": "ok", "database": "ok"}`;
       `docker compose logs 2>&1 | grep -iE "error|traceback"` returns nothing;
       `uv run pytest` green against the compose db on 5433.
