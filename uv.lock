@@ -334,7 +334,7 @@ requires-dist = [
     { name = "django-axes", specifier = ">=8.3" },
     { name = "django-csp", specifier = ">=4.0" },
     { name = "gunicorn", specifier = ">=26.0" },
-    { name = "psycopg", extras = ["binary"], specifier = ">=3.3" },
+    { name = "psycopg", extras = ["binary"], specifier = ">=3.3.4" },
     { name = "whitenoise", specifier = ">=6.12" },
 ]
 
