@@ -1,0 +1,13 @@
+# gitleaks configuration.
+#
+# The allowlist below is intentionally empty: it exists so that when a project
+# genuinely needs an exception (a documented test fixture, a sample key), the
+# pattern is already established — add the narrowest possible rule here with a
+# comment explaining why, instead of disabling scanning.
+
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Intentionally empty. Add narrowly-scoped exceptions with a justification comment."
+paths = []
