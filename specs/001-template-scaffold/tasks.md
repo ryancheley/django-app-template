@@ -86,27 +86,27 @@ Lodestar layout (plan.md Project Structure): apps at repo root alongside `config
 
 **Goal**: ruff → ty → prek → justfile → CI → zizmor-over-that-CI, plus pip-audit, deploy-check, and the scaffold coverage floor (plan Implementation Order step 2). Blocked until T022 is closed.
 
-- [ ] T023 [US2] Configure ruff in `pyproject.toml` (line-length 100, target py314, select E F I UP B DJ) then resolve every finding across the repo. Serial (pyproject).
+- [X] T023 [US2] Configure ruff in `pyproject.toml` (line-length 100, target py314, select E F I UP B DJ) then resolve every finding across the repo. Serial (pyproject).
       Verify: `uv run ruff check . && uv run ruff format --check .` exits 0. Commit: 🧹
-- [ ] T024 [US2] Configure ty in `pyproject.toml`: `[tool.ty.rules]` downgrading exactly `unresolved-attribute`, `invalid-assignment`, `invalid-argument-type`, `invalid-return-type` to `warn`, with the in-file comment naming them as ty's known Django false positives to restore when ty gains Django awareness (research R4); annotate remaining code. Serial (pyproject).
+- [X] T024 [US2] Configure ty in `pyproject.toml`: `[tool.ty.rules]` downgrading exactly `unresolved-attribute`, `invalid-assignment`, `invalid-argument-type`, `invalid-return-type` to `warn`, with the in-file comment naming them as ty's known Django false positives to restore when ty gains Django awareness (research R4); annotate remaining code. Serial (pyproject).
       Verify: `uv run ty check` exits 0. Commit: 🔍
-- [ ] T025 [US2] Create `.pre-commit-config.yaml` for prek: hygiene hooks (trailing-whitespace, end-of-file-fixer, check-yaml, check-toml, check-added-large-files, check-merge-conflict, detect-private-key), gitleaks, ruff check --fix + ruff format via `uv run`, ty via `uv run`, zizmor via pinned `uvx` on workflow files; excludes cover vendored `static/` where appropriate.
+- [X] T025 [US2] Create `.pre-commit-config.yaml` for prek: hygiene hooks (trailing-whitespace, end-of-file-fixer, check-yaml, check-toml, check-added-large-files, check-merge-conflict, detect-private-key), gitleaks, ruff check --fix + ruff format via `uv run`, ty via `uv run`, zizmor via pinned `uvx` on workflow files; excludes cover vendored `static/` where appropriate.
       Verify: `uvx prek@<pinned> run --all-files` exits 0. Commit: 🪝
-- [ ] T026 [US2] Create `justfile` implementing `contracts/justfile-recipes.md`: every constitutional recipe plus `tailwind-install`, `tailwind`, `htmx-update`; tool versions and checksums pinned once as top-level variables (R6/R8/R9); one-line comment above each recipe stating what it does and which CI job it mirrors; POSIX-sh portable throughout. Serial (justfile).
+- [X] T026 [US2] Create `justfile` implementing `contracts/justfile-recipes.md`: every constitutional recipe plus `tailwind-install`, `tailwind`, `htmx-update`; tool versions and checksums pinned once as top-level variables (R6/R8/R9); one-line comment above each recipe stating what it does and which CI job it mirrors; POSIX-sh portable throughout. Serial (justfile).
       Verify: `just --list` exits 0, then `just lint && just typecheck` exits 0. Commit: 🤖
-- [ ] T027 [US2] Create `.github/workflows/ci.yml` per research R12: `uv sync --frozen`; lint, format check, ty, coverage-gated pytest with Postgres service container, pip-audit, deploy-check, zizmor; every action pinned by full SHA with a version comment; least-privilege `permissions:`.
+- [X] T027 [US2] Create `.github/workflows/ci.yml` per research R12: `uv sync --frozen`; lint, format check, ty, coverage-gated pytest with Postgres service container, pip-audit, deploy-check, zizmor; every action pinned by full SHA with a version comment; least-privilege `permissions:`.
       Verify: `uvx prek@<pinned> run --files .github/workflows/ci.yml` exits 0. Commit: 🚀
-- [ ] T028 [P] [US2] Run zizmor over the workflows and fix every finding. Depends on T027 only; parallel-safe against T029/T030.
+- [X] T028 [P] [US2] Run zizmor over the workflows and fix every finding. Depends on T027 only; parallel-safe against T029/T030.
       Verify: `just zizmor` exits 0. Commit: 🛡️
-- [ ] T029 [P] [US2] Make the dependency audit gate green; any ignore carries an inline reason plus review date per the constitution. Parallel-safe against T028/T030.
+- [X] T029 [P] [US2] Make the dependency audit gate green; any ignore carries an inline reason plus review date per the constitution. Parallel-safe against T028/T030.
       Verify: `just audit` exits 0. Commit: 🔎
-- [ ] T030 [P] [US2] Make the deploy check green with prod-shaped env (`DEBUG=false`, real `config.settings`): fix any SECURE_*/cookie/HSTS findings in `config/settings.py`. Parallel-safe against T028/T029.
+- [X] T030 [P] [US2] Make the deploy check green with prod-shaped env (`DEBUG=false`, real `config.settings`): fix any SECURE_*/cookie/HSTS findings in `config/settings.py`. Parallel-safe against T028/T029.
       Verify: `just deploy-check` exits 0. Commit: 🔐
-- [ ] T031 [P] [US2] Create `.github/dependabot.yml` (uv + github-actions ecosystems).
+- [X] T031 [P] [US2] Create `.github/dependabot.yml` (uv + github-actions ecosystems).
       Verify: `uvx prek@<pinned> run --files .github/dependabot.yml` exits 0. Commit: 🤝
-- [ ] T032 [US2] Coverage floor, measurement one of two (linked to T045): measure scaffold coverage over sources `config` + `example`, set `--cov-fail-under` to the measured floor in `pyproject.toml` with an in-file comment stating the floor is measured-not-aspirational, ratchets upward only, and is re-verified post-instantiation (research R5 step 1). Depends on T016, T017, T018, T023–T025. Serial (pyproject).
+- [X] T032 [US2] Coverage floor, measurement one of two (linked to T045): measure scaffold coverage over sources `config` + `example`, set `--cov-fail-under` to the measured floor in `pyproject.toml` with an in-file comment stating the floor is measured-not-aspirational, ratchets upward only, and is re-verified post-instantiation (research R5 step 1). Depends on T016, T017, T018, T023–T025. Serial (pyproject).
       Verify: `just cov` exits 0. Commit: 📊
-- [ ] T033 [US2] **CHECKPOINT — Phase 2 closes.** All of:
+- [X] T033 [US2] **CHECKPOINT — Phase 2 closes.** All of:
       `just check` exits 0 (lint → typecheck → zizmor → cov);
       `uvx prek@<pinned> run --all-files` exits 0;
       `git push -u origin 001-template-scaffold` then `gh run watch --exit-status` shows `ci.yml` green.
