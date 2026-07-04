@@ -73,6 +73,7 @@ def test_successful_instantiation_post_conditions(repo_copy: Path) -> None:
     assert not (repo_copy / "example").exists()
     assert not (repo_copy / "scripts" / "instantiate.py").exists()
     assert not (repo_copy / ".github" / "workflows" / "instantiation.yml").exists()
+    assert not (repo_copy / "tests" / "test_instantiation.py").exists()
 
     settings = (repo_copy / "config" / "settings.py").read_text()
     urls = (repo_copy / "config" / "urls.py").read_text()

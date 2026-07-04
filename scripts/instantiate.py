@@ -155,6 +155,11 @@ def main() -> int:
     remove_example_references()
     if OWN_WORKFLOW.exists():
         OWN_WORKFLOW.unlink()
+    # The instantiation test exercises this script; both are template-repo
+    # artifacts and leave together.
+    own_test = REPO_ROOT / "tests" / "test_instantiation.py"
+    if own_test.exists():
+        own_test.unlink()
     SELF.unlink()
     if not any(SELF.parent.iterdir()):
         SELF.parent.rmdir()
