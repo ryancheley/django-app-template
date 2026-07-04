@@ -162,13 +162,13 @@ Lodestar layout (plan.md Project Structure): apps at repo root alongside `config
 
 **Goal**: README five-minute path, CLAUDE.md, `.env.example` audit — describing finished behavior only. Blocked until T044 is closed.
 
-- [ ] T045 [US4] Write `README.md`: five-minute clone-to-running-site path, instantiation instructions, recipe table, every user-action placeholder documented (project name, LICENSE holder) per spec FR-011/FR-018.
+- [X] T045 [US4] Write `README.md`: five-minute clone-to-running-site path, instantiation instructions, recipe table, every user-action placeholder documented (project name, LICENSE holder) per spec FR-011/FR-018.
       Verify: `uvx prek@<pinned> run --files README.md` exits 0 and `grep -q "instantiate" README.md && grep -q "LICENSE" README.md` exits 0. Commit: 📖
-- [ ] T046 [P] [US4] Rewrite `CLAUDE.md` (preserving the SPECKIT marker block): project layout, every just recipe, gate expectations, the rule that `just check` runs before every push.
+- [X] T046 [P] [US4] Rewrite `CLAUDE.md` (preserving the SPECKIT marker block): project layout, every just recipe, gate expectations, the rule that `just check` runs before every push.
       Verify: `uvx prek@<pinned> run --files CLAUDE.md` exits 0 and `grep -q "just check" CLAUDE.md` exits 0. Commit: 🤖
-- [ ] T047 [US4] Audit `.env.example` against both compose files: extract every `${VAR}`/`env_file` variable read by `compose.yaml` and `compose.prod.yaml`, diff against `.env.example` keys, reconcile.
+- [X] T047 [US4] Audit `.env.example` against both compose files: extract every `${VAR}`/`env_file` variable read by `compose.yaml` and `compose.prod.yaml`, diff against `.env.example` keys, reconcile.
       Verify: `uv run python -c "<extract-and-diff one-liner>"` exits 0 with an empty diff. Commit: 🔧
-- [ ] T048 [US4] **CHECKPOINT — Phase 5 closes (feature done).** Scripted fresh-clone walkthrough following only README commands:
+- [X] T048 [US4] **CHECKPOINT — Phase 5 closes (feature done).** Scripted fresh-clone walkthrough following only README commands:
       `git clone . /tmp/readme-walkthrough && cd /tmp/readme-walkthrough` then execute the README's quickstart lines verbatim (`cp .env.example .env`, `docker compose up -d --wait`, health curl, `just check`), all exiting 0;
       `grep -rn "TODO\|FIXME" --exclude-dir=.git --exclude-dir=.specify --exclude-dir=specs .` returns nothing (spec SC-007);
       `git push` then `gh pr create` and `gh pr checks --watch` all green — squash-merge, switch to main, pull, per the constitution.
