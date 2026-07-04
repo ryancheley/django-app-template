@@ -1,0 +1,16 @@
+# Keep build context minimal and secret-free
+.git
+.venv
+bin
+.env
+__pycache__
+*.py[cod]
+.pytest_cache
+.coverage
+htmlcov
+staticfiles
+specs
+.specify
+.claude
+.github
+.DS_Store

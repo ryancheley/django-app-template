@@ -1,0 +1,22 @@
+# Environment — never commit real configuration (constitution: Security by Default)
+.env
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+.coverage
+coverage.xml
+htmlcov/
+
+# Local tool binaries (Tailwind standalone CLI lands here via `just tailwind-install`)
+bin/
+
+# Django
+staticfiles/
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/
