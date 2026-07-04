@@ -115,6 +115,12 @@ def remove_example_references() -> None:
     content = pyproject.read_text(encoding="utf-8")
     content = content.replace('source = ["config", "example"]', 'source = ["config"]')
     content = content.replace('testpaths = ["tests", "example"]', 'testpaths = ["tests"]')
+    # Comments explaining the example app make no sense once it is gone.
+    content = "".join(
+        line
+        for line in content.splitlines(keepends=True)
+        if not (line.lstrip().startswith("#") and "example" in line)
+    )
     pyproject.write_text(content, encoding="utf-8")
 
     tailwind_input = REPO_ROOT / "static" / "css" / "input.css"
