@@ -74,9 +74,7 @@ def rewrite_placeholder(new_name: str) -> int:
             content = path.read_text(encoding="utf-8")
         except UnicodeDecodeError:
             continue  # binary (vendored assets, images)
-        updated = content.replace(PLACEHOLDER, new_name).replace(
-            PLACEHOLDER_NORMALIZED, normalized
-        )
+        updated = content.replace(PLACEHOLDER, new_name).replace(PLACEHOLDER_NORMALIZED, normalized)
         if updated != content:
             path.write_text(updated, encoding="utf-8")
             changed += 1
@@ -103,11 +101,7 @@ def remove_example_references() -> None:
         "from django.urls import include, path", "from django.urls import path"
     )
     urls.write_text(
-        "".join(
-            line
-            for line in urls_content.splitlines(keepends=True)
-            if "example" not in line
-        ),
+        "".join(line for line in urls_content.splitlines(keepends=True) if "example" not in line),
         encoding="utf-8",
     )
 
