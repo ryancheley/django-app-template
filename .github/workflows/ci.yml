@@ -1,0 +1,80 @@
+# CI runs the same gates as the local prek hooks plus the coverage-gated
+# suite, dependency audit, and deploy check (constitution: Tooling). Local
+# hooks mirror this; CI is the authoritative gate.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions: {}
+
+env:
+  # uv sync --frozen everywhere: lockfile drift fails the build.
+  UV_FROZEN: "1"
+
+jobs:
+  gates:
+    name: lint, typecheck, tests, audit, deploy-check
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    services:
+      postgres:
+        image: postgres:18
+        env:
+          POSTGRES_DB: template_project
+          POSTGRES_USER: template_project
+          POSTGRES_PASSWORD: ci-only-password
+        options: >-
+          --health-cmd "pg_isready -U template_project"
+          --health-interval 5s
+          --health-timeout 3s
+          --health-retries 10
+        ports:
+          - 5432:5432
+    env:
+      POSTGRES_HOST: localhost
+      POSTGRES_PORT: "5432"
+      POSTGRES_DB: template_project
+      POSTGRES_USER: template_project
+      POSTGRES_PASSWORD: ci-only-password
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@fac544c07dec837d0ccb6301d7b5580bf5edae39 # v8.2.0
+      - name: Sync locked dependencies
+        run: uv sync
+      - name: Lint (mirrors `just lint`)
+        run: |
+          uv run ruff check .
+          uv run ruff format --check .
+      - name: Type check (mirrors `just typecheck`)
+        run: uv run ty check --exit-zero-on-warning
+      - name: Coverage-gated tests (mirrors `just cov`)
+        run: uv run pytest --cov
+      - name: Dependency audit (mirrors `just audit`)
+        run: |
+          uv export --quiet --no-emit-project -o requirements-audit.txt
+          uvx pip-audit@2.10.1 --disable-pip -r requirements-audit.txt
+      - name: Deploy check (mirrors `just deploy-check`)
+        run: |
+          SECRET_KEY=$(uv run python -c "import secrets; print(secrets.token_urlsafe(64))") \
+          DEBUG=false \
+          ALLOWED_HOSTS=example.com \
+          uv run python manage.py check --deploy --fail-level WARNING
+
+  zizmor:
+    name: workflow audit
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@fac544c07dec837d0ccb6301d7b5580bf5edae39 # v8.2.0
+      - name: zizmor (mirrors `just zizmor`)
+        run: uvx zizmor@1.26.1 --persona regular .github/workflows/
