@@ -7,3 +7,10 @@ from example.models import ExampleItem
 def item_list(request: HttpRequest) -> HttpResponse:
     items = ExampleItem.objects.all()
     return render(request, "example/item_list.html", {"items": items})
+
+
+def item_count(request: HttpRequest) -> HttpResponse:
+    """htmx fragment endpoint: returns HTML, not JSON, so the demo shows the
+    hypermedia pattern the template expects."""
+    count = ExampleItem.objects.count()
+    return render(request, "example/_item_count.html", {"count": count})

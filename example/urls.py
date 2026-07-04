@@ -6,4 +6,5 @@ app_name = "example"
 
 urlpatterns = [
     path("", views.item_list, name="item_list"),
+    path("items/count/", views.item_count, name="item_count"),
 ]
