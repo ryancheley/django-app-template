@@ -118,17 +118,17 @@ Lodestar layout (plan.md Project Structure): apps at repo root alongside `config
 
 **Goal**: Vendored htmx, Tailwind standalone CLI recipes, committed compiled stylesheet, wired base template — born gated (plan Implementation Order step 3). Blocked until T033 is closed.
 
-- [ ] T034 [US1] Vendor htmx: run `just htmx-update` (downloads pinned 2.x, verifies SHA-256, writes `static/js/htmx.min.js` per research R9); commit the vendored file; confirm prek excludes/large-file settings accommodate it in the same task.
+- [X] T034 [US1] Vendor htmx: run `just htmx-update` (downloads pinned 2.x, verifies SHA-256, writes `static/js/htmx.min.js` per research R9); commit the vendored file; confirm prek excludes/large-file settings accommodate it in the same task.
       Verify: `test -s static/js/htmx.min.js && uvx prek@<pinned> run --all-files` exits 0. Commit: ⚡
-- [ ] T035 [US1] Install the Tailwind CLI via `just tailwind-install` (pinned version, SHA-256 verified, lands in gitignored `bin/` per research R8) then create `static/css/input.css` (v4 CSS-first: `@import "tailwindcss"` + `@source` directives).
+- [X] T035 [US1] Install the Tailwind CLI via `just tailwind-install` (pinned version, SHA-256 verified, lands in gitignored `bin/` per research R8) then create `static/css/input.css` (v4 CSS-first: `@import "tailwindcss"` + `@source` directives).
       Verify: `test -x bin/tailwindcss && test -s static/css/input.css` exits 0. Commit: 🎨
-- [ ] T036 [US1] Build the committed stylesheet: run `just tailwind`, commit `static/css/tailwind.css`; adjust prek excludes for the generated file in the same task if hooks flag it.
+- [X] T036 [US1] Build the committed stylesheet: run `just tailwind`, commit `static/css/tailwind.css`; adjust prek excludes for the generated file in the same task if hooks flag it.
       Verify: `test -s static/css/tailwind.css && uvx prek@<pinned> run --all-files` exits 0. Commit: 💅
-- [ ] T037 [US1] Wire `templates/base.html` to the compiled stylesheet plus vendored htmx via `{% static %}`.
+- [X] T037 [US1] Wire `templates/base.html` to the compiled stylesheet plus vendored htmx via `{% static %}`.
       Verify: `uv run pytest tests/test_health.py example` exits 0 (pages render with wired assets). Commit: 🔌
-- [ ] T038 [US1] Style `example/templates/example/item_list.html` with Tailwind utilities meeting Principle IV (4.5:1 contrast, visible focus, no color-only meaning) plus one minimal htmx interaction demonstrating the pattern; extend `example/tests/test_views.py` to assert the htmx endpoint responds.
+- [X] T038 [US1] Style `example/templates/example/item_list.html` with Tailwind utilities meeting Principle IV (4.5:1 contrast, visible focus, no color-only meaning) plus one minimal htmx interaction demonstrating the pattern; extend `example/tests/test_views.py` to assert the htmx endpoint responds.
       Verify: `uv run pytest example` exits 0. Commit: ✨
-- [ ] T039 [US1] **CHECKPOINT — Phase 3 closes.** All of:
+- [X] T039 [US1] **CHECKPOINT — Phase 3 closes.** All of:
       `just check` exits 0;
       `docker compose up -d --wait && curl -fsS localhost:8000/` returns the styled page (`curl -fsS localhost:8000/ | grep -q tailwind.css` and `grep -q htmx`);
       `uv run pytest` green.
