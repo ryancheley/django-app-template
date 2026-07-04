@@ -1,0 +1,11 @@
+/* Tailwind v4 CSS-first configuration: no tailwind.config.js, no Node.
+   Rebuild the committed static/css/tailwind.css with `just tailwind`. */
+@import "tailwindcss";
+
+/* Scan Django templates for class names. */
+@source "../../templates";
+@source "../../example/templates";
+
+/* Custom CSS only where Tailwind cannot achieve the result (constitution:
+   Technology Stack). Keep additions in this single entry point, each with a
+   comment explaining why a utility class could not do the job. */
