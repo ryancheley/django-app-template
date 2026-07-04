@@ -1,13 +1,13 @@
 # gitleaks configuration.
 #
-# The allowlist below is intentionally empty: it exists so that when a project
-# genuinely needs an exception (a documented test fixture, a sample key), the
-# pattern is already established — add the narrowest possible rule here with a
-# comment explaining why, instead of disabling scanning.
+# No allowlist entries exist yet — gitleaks rejects an empty [allowlist]
+# table, so the pattern is documented here instead. When a project genuinely
+# needs an exception (a documented test fixture, a sample key), add the
+# narrowest possible rule WITH a justification comment, e.g.:
+#
+#   [allowlist]
+#   description = "Why this exception is safe"
+#   paths = ['''tests/fixtures/sample\.pem''']
 
 [extend]
 useDefault = true
-
-[allowlist]
-description = "Intentionally empty. Add narrowly-scoped exceptions with a justification comment."
-paths = []
