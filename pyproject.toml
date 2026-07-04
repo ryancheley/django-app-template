@@ -28,3 +28,9 @@ dev = [
 [tool.uv]
 # Application repo, not an installable package.
 package = false
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "config.test_settings"
+# -n auto: parallel via pytest-xdist (constitution: Testing Standards)
+addopts = "-n auto"
+testpaths = ["tests", "example"]
