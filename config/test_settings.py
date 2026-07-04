@@ -23,3 +23,7 @@ STORAGES["staticfiles"]["BACKEND"] = "django.contrib.staticfiles.storage.StaticF
 # Axes interferes with test-client logins; its own behavior is not under test
 # in the template. Projects testing lockout flows re-enable it per-test.
 AXES_ENABLED = False
+
+# Serve straight from STATICFILES_DIRS: no collectstatic in tests, and no
+# whitenoise startup scan of a staticfiles/ directory that does not exist.
+WHITENOISE_AUTOREFRESH = True

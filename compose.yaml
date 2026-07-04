@@ -29,7 +29,9 @@ services:
     image: postgres:18
     env_file: .env
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      # Postgres 18+ images expect the mount at /var/lib/postgresql (not
+      # .../data) so pg_upgrade --link works across major upgrades.
+      - postgres_data:/var/lib/postgresql
     # Host port 5433 (not 5432) so host-side pytest reaches this database
     # without colliding with a locally installed Postgres. Override with
     # POSTGRES_HOST_PORT when several template-derived projects run at once.
