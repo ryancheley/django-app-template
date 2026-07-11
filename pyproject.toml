@@ -22,7 +22,7 @@ dev = [
     "pytest-cov>=7.1",
     "factory-boy>=3.3",
     "ruff>=0.15",
-    "ty>=0.0.56",
+    "ty>=0.0.58",
 ]
 
 [tool.uv]
