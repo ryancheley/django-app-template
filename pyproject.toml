@@ -39,15 +39,16 @@ target-version = "py314"
 select = ["E", "F", "I", "UP", "B", "DJ"]
 
 [tool.ty.rules]
-# ty does not yet understand Django's ORM/manager metaprogramming, so these
-# four rules fire on idiomatic Django code (Model.objects, CharField
-# assignment, etc.). Downgraded to warn — visible but non-blocking — until ty
-# gains Django awareness; restore to default severity then. All other rules
-# stay at default (constitution: Code Quality).
+# ty does not yet understand Django's (and factory_boy's) ORM/manager/options
+# metaprogramming, so these rules fire on idiomatic code (Model.objects,
+# CharField assignment, factory Meta, etc.). Downgraded to warn — visible but
+# non-blocking — until ty gains Django awareness; restore to default severity
+# then. All other rules stay at default (constitution: Code Quality).
 unresolved-attribute = "warn"
 invalid-assignment = "warn"
 invalid-argument-type = "warn"
 invalid-return-type = "warn"
+invalid-attribute-override = "warn"
 
 [tool.pytest.ini_options]
 DJANGO_SETTINGS_MODULE = "config.test_settings"
