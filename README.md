@@ -62,8 +62,8 @@ Host-side tests reach the compose database on `localhost:5433`.
 
 Local prek hooks mirror CI; CI is authoritative and is green on first push
 with zero repository configuration. The gates: ruff (lint + format), ty
-(type check), gitleaks (secrets), zizmor (workflow audit, actions pinned by
-SHA), pip-audit (fail-closed), the coverage-floored pytest suite, and
+(type check), gitleaks (secrets), zizmor (workflow audit), `gh actions-lock --verify`
+(actions pinned by tag, SHAs locked in `.github/workflows/actions.lock`), pip-audit (fail-closed), the coverage-floored pytest suite, and
 Django's deploy checks against the real settings module with `DEBUG=false`.
 
 The coverage floor in `pyproject.toml` is measured, not aspirational — it
