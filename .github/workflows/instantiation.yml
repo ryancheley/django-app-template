@@ -40,10 +40,10 @@ jobs:
       POSTGRES_USER: testproject
       POSTGRES_PASSWORD: ci-only-password
     steps:
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      - uses: actions/checkout@v7.0.1
         with:
           persist-credentials: false
-      - uses: astral-sh/setup-uv@18d369b23da25a81e9458561248e1aafff6a70fa # v10.3.1
+      - uses: astral-sh/setup-uv@v10.3.1
       - name: Example-isolation guard (template state)
         run: |
           if grep -rEn "from example|import example" --include="*.py" . \
@@ -53,6 +53,12 @@ jobs:
           fi
       - name: Run the instantiation script
         run: python3 scripts/instantiate.py testproject
+      - name: Actions lockfile still valid
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh extension install github/gh-actions-lock --pin v0.4.1
+          gh actions-lock --verify
       - name: Placeholder fully rewritten
         run: |
           if grep -rn "template_project" . --exclude-dir=.git; then

@@ -1,4 +1,4 @@
-# Dependabot keeps uv.lock and the SHA-pinned actions current.
+# Dependabot keeps uv.lock and the locked actions (actions.lock) current.
 # ruff/ty bumps land through uv.lock, so hook and CI versions follow
 # automatically (constitution: uv is the single source of tool versions).
 version: 2
@@ -11,3 +11,5 @@ updates:
     directory: /
     schedule:
       interval: weekly
+    cooldown:
+      default-days: 7

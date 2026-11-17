@@ -48,6 +48,6 @@ repos:
         pass_filenames: false
       - id: zizmor
         name: zizmor workflow audit (mirrors CI zizmor job)
-        entry: uvx zizmor@1.26.1 --persona regular
+        entry: uvx zizmor@1.32.0 --persona regular
         language: system
         files: ^\.github/workflows/.*\.ya?ml$

@@ -41,7 +41,8 @@ All developer tasks run through the justfile (`just --list` for everything):
   (`--exit-zero-on-warning`; the four Django false-positive rules are
   downgraded to warn in `pyproject.toml` with rationale).
 - Coverage floor in `pyproject.toml` is measured and only ratchets upward.
-- Workflows are SHA-pinned and zizmor-clean; pip-audit fails closed;
+- Workflows are locked via `.github/workflows/actions.lock` (re-run
+  `gh actions-lock` after editing any workflow) and zizmor-clean; pip-audit fails closed;
   `manage.py check --deploy --fail-level WARNING` passes with DEBUG=false.
 - No secrets in the repo; config comes from `.env` (see `.env.example`).
 - New code is fully type-annotated; every feature ships an integration

@@ -34,6 +34,7 @@ SKIP_DIRS = {".git", ".venv", "bin", "staticfiles", "__pycache__", ".pytest_cach
 EXAMPLE_APP_DIR = REPO_ROOT / "example"
 SELF = REPO_ROOT / "scripts" / "instantiate.py"
 OWN_WORKFLOW = REPO_ROOT / ".github" / "workflows" / "instantiation.yml"
+ACTIONS_LOCK = REPO_ROOT / ".github" / "workflows" / "actions.lock"
 
 
 def fail(message: str, code: int) -> int:
@@ -128,6 +129,25 @@ def remove_example_references() -> None:
     )
 
 
+def drop_own_workflow_from_lock() -> None:
+    """Remove this workflow's entry from actions.lock so `gh actions-lock
+    --verify` stays green. Every action it uses is also used by ci.yml, so the
+    shared `dependencies:` section needs no change."""
+    if not ACTIONS_LOCK.exists():
+        return
+    key = f"    '.github/workflows/{OWN_WORKFLOW.name}':"
+    kept, skipping = [], False
+    for line in ACTIONS_LOCK.read_text(encoding="utf-8").splitlines(keepends=True):
+        if line.rstrip("\n") == key:
+            skipping = True
+            continue
+        if skipping and line.startswith("        - "):
+            continue
+        skipping = False
+        kept.append(line)
+    ACTIONS_LOCK.write_text("".join(kept), encoding="utf-8")
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("name", help="new project name (lowercase Python identifier)")
@@ -149,6 +169,7 @@ def main() -> int:
     remove_example_references()
     if OWN_WORKFLOW.exists():
         OWN_WORKFLOW.unlink()
+    drop_own_workflow_from_lock()
     # The instantiation test exercises this script; both are template-repo
     # artifacts and leave together.
     own_test = REPO_ROOT / "tests" / "test_instantiation.py"

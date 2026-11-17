@@ -5,7 +5,7 @@
 # Standalone tools run via pinned uvx and are intentionally not project
 # dependencies; ruff/ty run through `uv run` so uv.lock pins them.
 PREK_VERSION := "0.4.8"
-ZIZMOR_VERSION := "1.26.1"
+ZIZMOR_VERSION := "1.32.0"
 PIP_AUDIT_VERSION := "2.10.1"
 
 # Tailwind standalone CLI (no Node toolchain) and vendored htmx, both
