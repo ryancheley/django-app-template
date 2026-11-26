@@ -1,0 +1,25 @@
+# Auto-merge Dependabot PRs once CI is green (constitution: CI must pass before
+# any merge). --auto queues the squash merge; GitHub completes it only after
+# main's required checks pass. Needs "Allow auto-merge" plus branch protection
+# with those checks (ryancheley/infra: github/branch_protections.tf). In a repo
+# created from this template without them, the merge step fails and nothing
+# merges.
+name: Dependabot auto-merge
+
+on: pull_request
+
+permissions: {}
+
+jobs:
+  auto-merge:
+    name: dependabot auto-merge
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    if: github.event.pull_request.user.login == 'dependabot[bot]'
+    steps:
+      - run: gh pr merge --auto --squash "$PR_URL"
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
