@@ -44,7 +44,7 @@ jobs:
       - uses: actions/checkout@v7.0.1
         with:
           persist-credentials: false
-      - uses: astral-sh/setup-uv@v10.3.3
+      - uses: astral-sh/setup-uv@v10.4.0
       - name: Sync locked dependencies
         run: uv sync
       - name: Lint (mirrors `just lint`)
@@ -75,7 +75,7 @@ jobs:
       - uses: actions/checkout@v7.0.1
         with:
           persist-credentials: false
-      - uses: astral-sh/setup-uv@v10.3.3
+      - uses: astral-sh/setup-uv@v10.4.0
       - name: zizmor (mirrors `just zizmor`)
         run: uvx zizmor@1.32.0 --persona regular .github/workflows/
 
